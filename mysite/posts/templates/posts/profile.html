@@ -1,0 +1,14 @@
+{% extends 'posts/base.html' %}
+{% block content %}
+
+{% if user %}
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    {% if account %}
+        <p>Balance: {{ account.points }}</p>
+    {% endif %}
+{% else %}
+    <p>Invalid/Inexistant profile.</p>
+{% endif %}
+
+{% endblock %}

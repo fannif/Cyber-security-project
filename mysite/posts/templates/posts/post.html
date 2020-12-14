@@ -1,0 +1,23 @@
+{% extends 'posts/base.html' %}
+{% block content %}
+
+{% if posting %}
+    <p>{{ posting.text }}</p>
+    <p>Price: {{ posting.price }}</p>
+    <p>Contact info: {{ email }}</p>
+    {% if posting.sold %}
+        <b>This item has been sold.</b>
+    {% else %}
+        <form method="post" action="/posts/post/{{ posting.id }}/purchase">
+            {% csrf_token %}
+            <input type="submit" value="Purchase" />
+        </form>
+    {% endif %}
+    {% if invalid %}
+        <p>Your balance is too small to buy this item.</p>
+    {% endif %}
+{% else %}
+    <p>Invalid/Inexistant post.</p>
+{% endif %}
+
+{% endblock %}

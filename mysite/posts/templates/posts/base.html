@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <header>
+    <h1>Posts App</h1>
+    {% if user.is_authenticated %}
+      <i>Logged in as {{ user.username }}</i>
+      <a href="/posts/">Home</a>
+      <a href="/posts/user/{{ user.id }}/">My profile</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+  </header>
+  <br>
+  <main>
+    <p></p>
+    {% block content %}
+    {% endblock %}
+    <p></p>
+  </main>
+  <br>
+</body>
+</html>

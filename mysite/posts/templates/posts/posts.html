@@ -1,0 +1,24 @@
+{% extends 'posts/base.html' %}
+{% block content %}
+
+<form method="post" action="/posts/list/add">
+    {% csrf_token %}
+    <label for="new_post">Type a new post: </label>
+    <input id="new_post" type="text" name="new_post" />
+    <label for="price">Price: </label>
+    <input id="price" type="number" name="price" />
+    <input type="submit" value="Post" />
+</form>
+<br />
+{% if posts_list %}
+    <h3>Current posts</h3>
+    <ul>
+    {% for post in posts_list %}
+        <li><a href="/posts/post/{{ post.id }}/">{{ post.text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>There are no posts yet.</p>
+{% endif %}
+
+{% endblock %}
