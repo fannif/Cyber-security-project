@@ -8,7 +8,7 @@
     {% if posting.sold %}
         <b>This item has been sold.</b>
     {% else %}
-        <form method="post" action="/posts/post/{{ posting.id }}/purchase">
+        <form method="post" action="/posts/post/{{ posting.id }}/purchase/{{ user.id }}/">
             {% csrf_token %}
             <input type="submit" value="Purchase" />
         </form>

@@ -4,6 +4,7 @@ from .models import Post, Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import datetime
+import sqlite3
 
 if len(User.objects.all()) < 1:
     User.objects.create_user('jack', 'aa@aa.aa', 'kittens')
@@ -22,6 +23,14 @@ def index(request):
 
 def postlist(request):
     posts_list = Post.objects.all().order_by('date')
+    if request.method == 'POST':
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        response = cursor.execute("SELECT id, text FROM Posts_post WHERE text LIKE '%%%s%%'" % (request.POST.get('search', ''))).fetchall()
+        posts_list = []
+        for i in response:
+            post = {'id': i[0], 'text': i[1]}
+            posts_list.append(post)
     context = {'posts_list': posts_list}
     return render(request, 'posts/posts.html', context)
 
@@ -30,6 +39,9 @@ def add_post(request):
     if request.method == 'POST':
         text = request.POST.get('new_post', '').strip()
         price = request.POST.get('price', '')
+        # conn = sqlite3.connect('db.sqlite3')
+        # cursor = conn.cursor()
+        # cursor.execute("INSERT INTO Posts_post (text, price, date, sold, account_id) VALUES ('%s', '%s', '%s', 'False', '%s')" % (text, price, datetime.datetime.now(), request.user.account.id)).fetchall()
         post = Post(text=text, price=price, date=datetime.datetime.now(), account=request.user.account)
         post.save()
         return redirect('/posts/list', {'posts_list': posts_list})
@@ -40,9 +52,9 @@ def posting(request, post_id):
     owner_user = User.objects.filter(id=owner_account.user_id)[0]
     return render(request, 'posts/post.html', {'posting': post, 'email': owner_user.email})
 
-def purchase(request, post_id):
+def purchase(request, post_id, user_id):
     if request.method == 'POST':
-        user = request.user
+        user = User.objects.get(id=user_id)
         account = Account.objects.filter(user_id=user.id)[0]
         post = Post.objects.get(id=post_id)
 
