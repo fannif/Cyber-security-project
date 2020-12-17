@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .models import Post, Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from posts.forms import SignUpForm
 import datetime
 import sqlite3
 
@@ -87,3 +88,17 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+
+def register(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form = SignUpForm()
+    return render(request, 'posts/register.html', {'form': form})

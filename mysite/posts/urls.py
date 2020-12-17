@@ -13,4 +13,5 @@ urlpatterns = [
     path('user/<int:user_id>/', views.profile, name='profile'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='posts/login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(template_name='posts/logout.html'), name='logout'),
+    url(r'^register/$', views.register, name='register'),
 ]
