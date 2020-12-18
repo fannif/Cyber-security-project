@@ -67,7 +67,10 @@ def purchase(request, post_id, user_id):
         
         account = Account.objects.get(user_id=user.id)
         account.points = account.points - post.price
+        account2 = Account.objects.get(user_id=owner_user.id)
+        account2.points = account2.points + post.price
         account.save()
+        account2.save()
         post.sold = True
         post.save()
 
